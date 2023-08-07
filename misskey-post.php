@@ -32,10 +32,10 @@ class Misskey {
     public function Post($postId, $post=null) {
         require_once(__DIR__ . '/misskey-Settings.php');
         require_once(__DIR__ . '/lib/API.php');
-        $options = get_option(MisskeySettings::OptionName, $this->defaults);
-        if(!isset($options['i']))
+        $options = get_option(MisskeySettings::OptionName);
+        if(!isset($options['appSecret']))
             return;
-        $mapi = new MisskeyAPI($options['url'], $options['i']);
+        $mapi = new MisskeyAPI($options['url'], $options['appSecret']);
 
         if(wp_is_post_revision($postId))
             return;
@@ -47,6 +47,7 @@ class Misskey {
         //$content = "とあるぶろぐのきじ \nhttps://misskey.xyz \n ここはMisskey";
         $res = $mapi->CreateNote([
             'text' => $content,
+			'i' => $options['appSecret'],
             //'visibility' => 'private'
         ]);
     }
